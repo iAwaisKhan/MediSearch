@@ -1,0 +1,13 @@
+{
+  "name": "medisearch-mern",
+  "version": "1.0.0",
+  "description": "MediSearch – Industry-ready MERN stack medicine information app",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run build && npm run preview"
+  },
+  "workspaces": ["backend", "frontend"]
+}
