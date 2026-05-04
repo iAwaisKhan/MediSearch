@@ -1,0 +1,62 @@
+"use strict";
+const NodeCache     = require("node-cache");
+const MedicineCache = require("../models/MedicineCache");
+const logger        = require("../utils/logger");
+
+// In-memory L1 cache (5 min) – reduces MongoDB round trips
+const memCache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
+
+function makeCacheKey(name, lang) {
+  return `${lang}:${name.toLowerCase().trim()}`;
+}
+
+async function getCache(name, lang) {
+  const key = makeCacheKey(name, lang);
+
+  // 1. Check memory cache
+  const memHit = memCache.get(key);
+  if (memHit) {
+    logger.debug(`L1 cache hit: ${key}`);
+    return { data: memHit, source: "memory" };
+  }
+
+  // 2. Check MongoDB cache
+  try {
+    const doc = await MedicineCache.findOne({ cacheKey: key });
+    if (doc) {
+      // Increment hit count async (don't await)
+      MedicineCache.updateOne({ cacheKey: key }, { $inc: { hitCount: 1 } }).catch(() => {});
+      const plain = doc.toObject();
+      memCache.set(key, plain); // Warm L1 cache
+      logger.debug(`L2 (MongoDB) cache hit: ${key}`);
+      return { data: plain, source: "mongodb" };
+    }
+  } catch (err) {
+    logger.warn(`Cache read error: ${err.message}`);
+  }
+
+  return null;
+}
+
+async function setCache(name, lang, data) {
+  const key = makeCacheKey(name, lang);
+  memCache.set(key, data);
+
+  try {
+    await MedicineCache.findOneAndUpdate(
+      { cacheKey: key },
+      {
+        cacheKey:       key,
+        medicineName:   name.toLowerCase().trim(),
+        lang,
+        ...data,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+  } catch (err) {
+    logger.warn(`Cache write error: ${err.message}`);
+  }
+}
+
+module.exports = { getCache, setCache, makeCacheKey };
