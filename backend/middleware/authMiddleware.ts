@@ -54,3 +54,5 @@ exports.restrictTo = (...roles) => (req, _res, next) => {
   }
   next();
 };
+
+export {};

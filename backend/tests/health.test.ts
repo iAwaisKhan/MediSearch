@@ -18,3 +18,5 @@ describe("GET /api/health", () => {
     expect(res.body).toHaveProperty("env");
   });
 });
+
+export {};

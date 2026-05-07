@@ -67,7 +67,7 @@ userSchema.methods.getSignedJWT = function () {
 // Instance method: check if password changed after JWT was issued
 userSchema.methods.changedPasswordAfter = function (jwtIat) {
   if (this.passwordChangedAt) {
-    return parseInt(this.passwordChangedAt.getTime() / 1000, 10) > jwtIat;
+    return Math.floor(this.passwordChangedAt.getTime() / 1000) > jwtIat;
   }
   return false;
 };
@@ -80,3 +80,5 @@ userSchema.methods.toJSON = function () {
 };
 
 module.exports = mongoose.model("User", userSchema);
+
+export {};

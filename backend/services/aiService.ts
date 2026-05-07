@@ -102,7 +102,9 @@ async function callLLM7(prompt) {
   }
 
   const data = await response.json();
-  const content = data.choices[0].message.content;
+  let content = data.choices[0].message.content;
+  // Cleanup markdown fences if AI returns them
+  content = content.replace(/^```(json)?/, '').replace(/```$/, '').trim();
   return JSON.parse(content);
 }
 
@@ -176,7 +178,9 @@ async function callGemini(prompt) {
       }
     });
 
-    return JSON.parse(response.text);
+    let text = response.text;
+    text = text.replace(/^```(json)?/, '').replace(/```$/, '').trim();
+    return JSON.parse(text);
   } catch (err) {
     logger.error(`Gemini API error: ${err.message}`);
     if (err instanceof SyntaxError) {
@@ -208,3 +212,5 @@ async function fetchCompare(medA, medB, lang = "en") {
 }
 
 module.exports = { fetchMedicine, fetchCompare };
+
+export {};

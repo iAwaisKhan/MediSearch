@@ -94,3 +94,5 @@ exports.logout = (_req, res) => {
     .status(200)
     .json({ status: "success", message: "Logged out successfully." });
 };
+
+export {};

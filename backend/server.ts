@@ -114,7 +114,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Graceful shutdown
-process.on("unhandledRejection", (err) => {
+process.on("unhandledRejection", (err: any) => {
   logger.error(`Unhandled Rejection: ${err.message}`);
   server.close(() => process.exit(1));
 });
@@ -125,3 +125,5 @@ process.on("SIGTERM", () => {
 });
 
 module.exports = app;
+
+export {};

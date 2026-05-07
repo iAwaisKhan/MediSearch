@@ -27,3 +27,5 @@ try {
 }
 
 module.exports = envSchema;
+
+export {};

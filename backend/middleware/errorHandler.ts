@@ -9,8 +9,8 @@ function handleDuplicateKey(err) {
   const field = Object.keys(err.keyValue)[0];
   return new AppError(`${field} already exists. Please use a different value.`, 400);
 }
-function handleValidationError(err) {
-  const messages = Object.values(err.errors).map((e) => e.message).join(". ");
+function handleValidationError(err: any) {
+  const messages = Object.values(err.errors).map((e: any) => e.message).join(". ");
   return new AppError(messages, 400);
 }
 function handleJWTError() {
@@ -48,3 +48,5 @@ module.exports = (err, req, res, next) => {
     ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
   });
 };
+
+export {};

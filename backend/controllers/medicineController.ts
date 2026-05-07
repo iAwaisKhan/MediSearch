@@ -117,3 +117,5 @@ exports.compareMedicines = catchAsync(async (req, res, next) => {
     data: results,
   });
 });
+
+export {};
