@@ -15,3 +15,5 @@ router.patch("/update-profile",         ctrl.updateProfile);
 router.patch("/change-password",        ctrl.changePassword);
 
 module.exports = router;
+
+export {};

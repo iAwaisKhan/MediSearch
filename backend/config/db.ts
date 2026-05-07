@@ -10,6 +10,7 @@ const connectDB = async () => {
     logger.info(`MongoDB connected: ${conn.connection.host}`);
   } catch (err) {
     logger.warn(`MongoDB connection failed: ${err.message}. Running without DB...`);
+    mongoose.set("bufferCommands", false);
     // process.exit(1);
   }
 };
@@ -18,3 +19,5 @@ mongoose.connection.on("disconnected", () => logger.warn("MongoDB disconnected")
 mongoose.connection.on("reconnected",  () => logger.info("MongoDB reconnected"));
 
 module.exports = connectDB;
+
+export {};

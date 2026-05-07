@@ -52,3 +52,5 @@ const medicineCacheSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("MedicineCache", medicineCacheSchema);
+
+export {};

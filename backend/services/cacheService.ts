@@ -60,3 +60,5 @@ async function setCache(name, lang, data) {
 }
 
 module.exports = { getCache, setCache, makeCacheKey };
+
+export {};

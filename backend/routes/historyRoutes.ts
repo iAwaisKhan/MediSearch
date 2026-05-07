@@ -12,3 +12,5 @@ router.delete("/",     ctrl.clearHistory);
 router.delete("/:id",  ctrl.deleteHistoryItem);
 
 module.exports = router;
+
+export {};

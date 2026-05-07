@@ -7,7 +7,7 @@ exports.getHistory = catchAsync(async (req, res) => {
   const page  = Math.max(1, parseInt(req.query.page)  || 1);
   const limit = Math.min(50, parseInt(req.query.limit) || 20);
   const skip  = (page - 1) * limit;
-  const filter = { user: req.user.id };
+  const filter: any = { user: req.user._id };
   if (req.query.type) filter.type = req.query.type;
 
   const [docs, total] = await Promise.all([
@@ -58,3 +58,5 @@ exports.getStats = catchAsync(async (req, res) => {
   ]);
   res.status(200).json({ status: "success", data: { stats, topSearches } });
 });
+
+export {};

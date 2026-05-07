@@ -10,3 +10,5 @@ router.get("/search",  optionalAuth, validateMedicineSearch, ctrl.searchMedicine
 router.get("/compare", optionalAuth, validateCompare,        ctrl.compareMedicines);
 
 module.exports = router;
+
+export {};

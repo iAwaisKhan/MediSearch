@@ -50,3 +50,5 @@ exports.validateCompare = [
   query("lang").optional().isIn(["en", "hi"]),
   validate,
 ];
+
+export {};
