@@ -4,10 +4,9 @@
   "description": "MediSearch MERN backend – Express + MongoDB + Claude AI",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node server.ts",
-    "dev": "nodemon --exec ts-node server.ts",
-    "lint": "eslint .",
-    "test": "jest"
+    "dev": "ts-node-dev server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@google/genai": "^1.50.1",
