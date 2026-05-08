@@ -108,8 +108,8 @@ app.all("*", (req, _res, next) => {
 app.use(errorHandler);
 
 // ── Start ──────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
+const PORT = parseInt(process.env.PORT || "5000", 10);
+const server = app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 

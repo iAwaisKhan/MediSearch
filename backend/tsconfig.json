@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "allowJs": true,
-    "checkJs": false,
+    "outDir": "./dist",
+    "rootDir": "./",
     "strict": false,
     "noImplicitAny": false,
+    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
-    "outDir": "./dist"
+    "resolveJsonModule": true,
+    "declaration": false,
+    "types": ["node"]
   },
   "include": [
     "server.ts",
@@ -21,8 +23,7 @@
     "models/**/*",
     "routes/**/*",
     "services/**/*",
-    "utils/**/*",
-    "tests/**/*"
+    "utils/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }
