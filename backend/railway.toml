@@ -1,8 +1,9 @@
 [build]
 builder = "NIXPACKS"
+buildCommand = "npm install --include=dev && npx tsc"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "node dist/server.js"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
