@@ -76,13 +76,15 @@ Respond ONLY with a JSON array of exactly 2 medicine objects (no markdown fences
 }
 
 // ── Core call ──────────────────────────────────────────────────────────────
+// WARNING: LLM7 uses a self-signed cert. We scope the TLS bypass to ONLY
+//          this request via a custom https.Agent. Remove once LLM7 fixes their cert.
+const https = require("https");
+const llm7Agent = new https.Agent({ rejectUnauthorized: false });
+
 async function callLLM7(prompt) {
   if (!process.env.LLM7_API_KEY) {
     throw new Error("LLM7 API Key not found");
   }
-
-  // Bypass self-signed certificate error for api.llm7.io
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   const response = await fetch("https://api.llm7.io/v1/chat/completions", {
     method: "POST",
@@ -93,7 +95,9 @@ async function callLLM7(prompt) {
     body: JSON.stringify({
       model: "default",
       messages: [{ role: "user", content: prompt }]
-    })
+    }),
+    // @ts-ignore – Node 18+ fetch supports the dispatcher/agent option
+    dispatcher: llm7Agent,
   });
 
   if (!response.ok) {
