@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import SearchBar from "../components/medicine/SearchBar";
 
 const FEATURES = [
-  { icon: "🔍", title: "Instant Search",       desc: "Get complete medicine info in seconds powered by Claude AI." },
+  { icon: "🔍", title: "Instant Search",       desc: "Get complete medicine info in seconds powered by AI." },
   { icon: "⚖️", title: "Side-by-Side Compare", desc: "Compare two medicines across purpose, dosage, side effects and more." },
   { icon: "💚", title: "Generic Alternatives",  desc: "Find cheaper Indian generic brands with real price comparisons." },
   { icon: "🇮🇳", title: "Hindi Support",        desc: "Full medicine information available in Hindi (हिंदी) with one click." },

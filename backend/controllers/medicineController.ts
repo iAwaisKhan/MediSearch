@@ -31,7 +31,7 @@ exports.searchMedicine = catchAsync(async (req, res, next) => {
     });
   }
 
-  // 2. Call Claude AI
+  // 2. Call AI
   const data = await aiService.fetchMedicine(name, lang);
 
   if (data?.error) {
@@ -87,7 +87,7 @@ exports.compareMedicines = catchAsync(async (req, res, next) => {
     results   = [cachedA.data, cachedB.data];
     wasCached = true;
   } else {
-    // Ask Claude to compare both at once (1 API call)
+    // Ask AI to compare both at once (1 API call)
     const arr = await aiService.fetchCompare(a, b, lang);
 
     if (!Array.isArray(arr) || arr.length < 2) {

@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="flex items-center gap-4 text-xs text-slate-400">
           <Link to="/search"  className="hover:text-brand-300 transition">Search</Link>
           <Link to="/compare" className="hover:text-brand-300 transition">Compare</Link>
-          <span>Powered by Claude AI</span>
+          <span>Powered by AI</span>
         </div>
       </div>
     </footer>
