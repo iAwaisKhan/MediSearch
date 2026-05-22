@@ -6,6 +6,12 @@ MediSearch securely connects users with critical pharmaceutical information. By 
 
 ---
 
+## System Architechture 
+
+<img width="2246" height="2116" alt="MediSearch System Architecture" src="https://github.com/user-attachments/assets/dabe4db9-1837-41dc-90dd-561be02e729f" />
+
+--- 
+
 ## ✨ Features
 
 - **AI-Powered Search:** Get comprehensive drug insights (uses, side effects, interactions) powered by LLM7 & Gemini.
