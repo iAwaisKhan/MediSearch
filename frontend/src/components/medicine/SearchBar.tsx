@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useLang } from "../../context/LangContext";
 
 const SUGGESTIONS = [
-  "Paracetamol", "Metformin", "Amoxicillin", "Omeprazole",
-  "Azithromycin", "Atorvastatin", "Cetirizine", "Ibuprofen",
-  "Pantoprazole", "Dolo 650",
+  "Paracetamol", "Ibuprofen", "Amoxicillin", "Metformin", "Atorvastatin"
 ];
 
 export default function SearchBar({ onSearch, loading, initialValue = "" }) {
@@ -18,20 +16,18 @@ export default function SearchBar({ onSearch, loading, initialValue = "" }) {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <form onSubmit={handleSubmit} className="flex gap-3 items-center">
-        <div className="flex-1 relative">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-300 pointer-events-none">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" strokeLinecap="round" />
-            </svg>
-          </div>
+      <form onSubmit={handleSubmit} className="flex items-center bg-white p-1.5 rounded-full shadow-sm border border-slate-200/60">
+        <div className="flex-1 flex items-center bg-[#2C2C2C] rounded-full px-5 py-3 relative">
+          <svg className="w-5 h-5 text-slate-400 pointer-events-none shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+          </svg>
           <input
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder={t("searchPlaceholder")}
-            aria-label={t("searchPlaceholder")}
-            className="input pl-11 pr-4 py-3.5 text-base shadow-sm"
+            placeholder="Try paracetamol, metformin, ibuprofen..."
+            aria-label="Search medicine"
+            className="bg-transparent text-white placeholder-slate-400 w-full ml-3 outline-none text-sm font-medium"
             autoFocus
             autoComplete="off"
           />
@@ -40,7 +36,7 @@ export default function SearchBar({ onSearch, loading, initialValue = "" }) {
               type="button"
               onClick={() => setValue("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -48,23 +44,20 @@ export default function SearchBar({ onSearch, loading, initialValue = "" }) {
             </button>
           )}
         </div>
-        <button type="submit" disabled={loading || !value.trim()} className="btn-primary px-6 py-3.5 text-base">
+        
+        <button type="submit" disabled={loading || !value.trim()} className="px-6 py-3 text-slate-300 hover:text-slate-600 transition font-medium text-sm flex items-center gap-1.5 disabled:opacity-50 disabled:hover:text-slate-300">
           {loading ? (
-            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <span className="w-4 h-4 border-2 border-slate-200 border-t-slate-500 rounded-full animate-spin" />
           ) : (
             <>
-              {t("searchBtn")}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5-5 5M6 12h12" />
-              </svg>
+              Search <span className="font-sans">→</span>
             </>
           )}
         </button>
       </form>
 
       {/* Suggestion chips */}
-      <div className="flex flex-wrap gap-2 mt-3 items-center">
-        <span className="text-xs text-slate-400 font-medium">{t("try")}</span>
+      <div className="flex flex-wrap gap-2 mt-4 items-center justify-start ml-2">
         {SUGGESTIONS.map((s) => (
           <button key={s} type="button" className="chip" onClick={() => { setValue(s); onSearch(s); }}>
             {s}

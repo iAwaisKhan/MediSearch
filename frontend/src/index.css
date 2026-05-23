@@ -4,37 +4,37 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply bg-slate-50 text-slate-800 font-sans antialiased; }
-  h1, h2, h3 { @apply font-display; }
+  body { @apply bg-[#F6F6F2] text-[#2C2C2C] font-sans antialiased; }
+  h1, h2, h3 { @apply font-display text-[#111111]; }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-brand-300 text-white
-           rounded-xl font-medium text-sm transition-all duration-150
-           hover:bg-brand-400 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#333333] text-white
+           rounded-full font-medium text-sm transition-all duration-150
+           hover:bg-black active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200
-           text-slate-700 rounded-xl font-medium text-sm transition-all duration-150
-           hover:bg-slate-50 active:scale-95 disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-transparent border border-slate-200/60
+           text-slate-500 rounded-full font-medium text-sm transition-all duration-150
+           hover:border-slate-300 hover:text-slate-800 active:scale-95 disabled:opacity-50;
   }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-4 py-2 text-slate-600 rounded-lg text-sm
-           font-medium transition hover:bg-slate-100 active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2 text-slate-500 rounded-full text-sm
+           font-medium transition hover:bg-slate-200/50 hover:text-slate-800 active:scale-95;
   }
   .btn-danger {
     @apply inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600
-           border border-red-200 rounded-xl text-sm font-medium transition
+           border border-red-200 rounded-full text-sm font-medium transition
            hover:bg-red-100 active:scale-95;
   }
   .card {
-    @apply bg-white rounded-2xl border border-slate-100 shadow-sm;
+    @apply bg-white rounded-3xl border border-slate-100 shadow-sm;
   }
   .input {
-    @apply w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm
-           focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-300
-           placeholder:text-slate-400 transition bg-white;
+    @apply w-full px-5 py-3 border border-transparent rounded-full text-sm
+           focus:outline-none focus:ring-0
+           placeholder:text-slate-400 transition;
   }
   .label {
     @apply block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5;
@@ -43,14 +43,13 @@
   .badge-amber  { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-300; }
   .badge-red    { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600; }
   .badge-slate  { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600; }
-  .section-label { @apply text-[10px] font-semibold uppercase tracking-widest text-brand-300 mb-1.5; }
+  .section-label { @apply text-[10px] font-semibold uppercase tracking-widest text-[#7AA95C] mb-1.5; }
   .chip {
-    @apply text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50
-           text-slate-600 cursor-pointer transition hover:bg-brand-50 hover:text-brand-400
-           hover:border-brand-200 font-medium;
+    @apply text-xs px-4 py-2 rounded-full border border-slate-200/60 bg-transparent
+           text-slate-400 cursor-pointer transition hover:border-slate-300 hover:text-slate-600 font-medium;
   }
-  .divider { @apply border-t border-slate-100; }
+  .divider { @apply border-t border-slate-200/50; }
   .spinner {
-    @apply w-8 h-8 border-4 border-brand-50 border-t-brand-300 rounded-full animate-spin-slow;
+    @apply w-8 h-8 border-4 border-slate-100 border-t-slate-400 rounded-full animate-spin-slow;
   }
 }

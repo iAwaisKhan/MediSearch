@@ -22,11 +22,11 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen w-full flex flex-col overflow-hidden relative">
       <ScrollToTop />
       <Navbar />
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-y-auto pb-16">
         <Routes>
           <Route path="/"        element={<Home />} />
           <Route path="/search"  element={<Search />} />
