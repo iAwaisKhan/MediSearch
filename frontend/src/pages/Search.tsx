@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMedicine } from "../hooks/useMedicine";
 import { useLang } from "../context/LangContext";
 import SearchBar    from "../components/medicine/SearchBar";
+import ImageUpload  from "../components/medicine/ImageUpload";
 import MedicineCard from "../components/medicine/MedicineCard";
 import Spinner      from "../components/ui/Spinner";
 import ErrorBox     from "../components/ui/ErrorBox";
@@ -14,6 +15,7 @@ export default function SearchPage() {
   const { t }    = useLang();
   const { data, loading, error, cached, search, reset } = useMedicine();
   const lastQuery = useRef("");
+  const [showOcr, setShowOcr] = useState(false);
 
   // Run search if ?q= in URL on mount / URL change
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function SearchPage() {
     lastQuery.current = name;
     setSearchParams({ q: name });
     search(name);
+    setShowOcr(false); // Close OCR panel after selecting a medicine
   };
 
   const handleFollowUp = (q) => {
@@ -44,7 +47,18 @@ export default function SearchPage() {
       />
 
       <div className="mb-8">
-        <SearchBar onSearch={handleSearch} loading={loading} initialValue={searchParams.get("q") || ""} />
+        <SearchBar
+          onSearch={handleSearch}
+          loading={loading}
+          initialValue={searchParams.get("q") || ""}
+          showOcr={showOcr}
+          onToggleOcr={() => setShowOcr((prev) => !prev)}
+        />
+
+        {/* OCR Image Upload Panel */}
+        {showOcr && (
+          <ImageUpload onMedicineDetected={handleSearch} />
+        )}
       </div>
 
       {/* States */}
@@ -67,3 +81,4 @@ export default function SearchPage() {
     </div>
   );
 }
+

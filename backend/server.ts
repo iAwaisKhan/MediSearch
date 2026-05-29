@@ -83,6 +83,7 @@ app.use("/api/", globalLimiter);
 app.use("/api/auth/login",    authLimiter);
 app.use("/api/auth/register", authLimiter);
 app.use("/api/medicine/",     aiLimiter);
+app.use("/api/ocr/",          aiLimiter);
 
 // ── Health check ───────────────────────────────────────────────────────────
 app.get("/api/health", (_req, res) => {
@@ -97,6 +98,7 @@ app.get("/api/health", (_req, res) => {
 // ── Routes ─────────────────────────────────────────────────────────────────
 app.use("/api/auth",     require("./routes/authRoutes"));
 app.use("/api/medicine", require("./routes/medicineRoutes"));
+app.use("/api/ocr",      require("./routes/ocrRoutes"));
 app.use("/api/history",  require("./routes/historyRoutes"));
 
 // ── 404 handler ────────────────────────────────────────────────────────────

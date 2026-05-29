@@ -61,6 +61,14 @@ export const authAPI = {
 export const medicineAPI = {
   search  : (name, lang = "en") => api.get("/medicine/search",  { params: { name, lang } }),
   compare : (a, b, lang = "en") => api.get("/medicine/compare", { params: { a, b, lang } }),
+  ocr     : (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    return api.post("/ocr/extract", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 60000, // OCR can take longer
+    });
+  },
 };
 
 // ── History ──────────────────────────────────────────────────────────────

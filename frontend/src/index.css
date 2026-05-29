@@ -4,7 +4,13 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply bg-[#F6F6F2] text-[#2C2C2C] font-sans antialiased; }
+  body { 
+    @apply bg-[#F6F6F2] text-[#2C2C2C] font-sans antialiased; 
+    background-image: url('/Background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
   h1, h2, h3 { @apply font-display text-[#111111]; }
 }
 
