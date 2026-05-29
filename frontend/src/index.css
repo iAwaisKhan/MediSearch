@@ -6,7 +6,7 @@
   html { scroll-behavior: smooth; }
   body { 
     @apply bg-[#F6F6F2] text-[#2C2C2C] font-sans antialiased; 
-    background-image: url('/Background.png');
+    background-image: url('/Background.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
