@@ -5,7 +5,7 @@ const SUGGESTIONS = [
   "Paracetamol", "Ibuprofen", "Amoxicillin", "Metformin", "Atorvastatin"
 ];
 
-export default function SearchBar({ onSearch, loading, initialValue = "", showOcr = false, onToggleOcr }) {
+export default function SearchBar({ onSearch, loading, initialValue = "", showOcr = false, onToggleOcr }: { onSearch: any, loading: any, initialValue?: string, showOcr?: boolean, onToggleOcr?: any }) {
   const { t } = useLang();
   const [value, setValue] = useState(initialValue);
 

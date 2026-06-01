@@ -1,10 +1,10 @@
 import AppError from "../utils/AppError";
 import logger from "../utils/logger";
 
-function handleCastError(err) {
+function handleCastError(err: any) {
   return new AppError(`Invalid ${err.path}: ${err.value}`, 400);
 }
-function handleDuplicateKey(err) {
+function handleDuplicateKey(err: any) {
   const field = Object.keys(err.keyValue)[0];
   return new AppError(`${field} already exists. Please use a different value.`, 400);
 }

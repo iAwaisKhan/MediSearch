@@ -8,7 +8,7 @@ import ErrorBox    from "../components/ui/ErrorBox";
 import PageHeader  from "../components/ui/PageHeader";
 import { Link }    from "react-router-dom";
 
-function StatCard({ label, value, sub }) {
+function StatCard({ label, value, sub }: { label: any, value: any, sub?: any }) {
   return (
     <div className="card p-4 text-center">
       <p className="text-2xl font-bold font-display text-brand-400">{value}</p>

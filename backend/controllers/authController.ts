@@ -34,7 +34,7 @@ export const register = catchAsync(async (req: any, res: any, next: any) => {
 
   const user = await User.create({ name, email, password, preferredLang });
   logger.info(`New user registered: ${email}`);
-  sendToken(user, 201, res);
+  sendToken(user as any as IUser, 201, res);
 });
 
 // POST /api/auth/login
@@ -90,7 +90,7 @@ export const changePassword = catchAsync(async (req: any, res: any, next: any) =
 });
 
 // POST /api/auth/logout
-export const logout = (_req, res) => {
+export const logout = (_req: any, res: any) => {
   res
     .cookie("jwt", "", { expires: new Date(0), httpOnly: true })
     .status(200)

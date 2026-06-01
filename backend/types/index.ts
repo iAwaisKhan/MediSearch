@@ -11,6 +11,7 @@ export interface IUser extends Document {
   passwordChangedAt?: Date;
   matchPassword(entered: string): Promise<boolean>;
   changedPasswordAfter(jwtTimestamp: number): boolean;
+  getSignedJWT(): string;
 }
 
 export interface ISearchHistory extends Document {

@@ -93,10 +93,10 @@ app.get("/api/health", (_req: any, res: any) => {
 });
 
 // ── Routes ─────────────────────────────────────────────────────────────────
-app.use("/api/auth",     require("./routes/authRoutes"));
-app.use("/api/medicine", require("./routes/medicineRoutes"));
-app.use("/api/ocr",      require("./routes/ocrRoutes"));
-app.use("/api/history",  require("./routes/historyRoutes"));
+app.use("/api/auth",     require("./routes/authRoutes").default);
+app.use("/api/medicine", require("./routes/medicineRoutes").default);
+app.use("/api/ocr",      require("./routes/ocrRoutes").default);
+app.use("/api/history",  require("./routes/historyRoutes").default);
 
 // ── 404 handler ────────────────────────────────────────────────────────────
 app.all("*", (req: any, _res: any, next: any) => {

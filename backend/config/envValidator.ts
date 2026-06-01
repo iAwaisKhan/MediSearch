@@ -18,9 +18,9 @@ const envSchema = z.object({
 try {
   envSchema.parse(process.env);
   logger.info("Environment variables validated successfully.");
-} catch (error) {
+} catch (error: any) {
   logger.error("Environment validation failed:");
-  error.errors.forEach((err) => {
+  error.errors?.forEach((err: any) => {
     logger.error(`- ${err.path.join(".")}: ${err.message}`);
   });
   process.exit(1);

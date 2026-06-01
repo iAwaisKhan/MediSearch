@@ -1,4 +1,4 @@
-export default function PageHeader({ eyebrow, title, subtitle, center = false }) {
+export default function PageHeader({ eyebrow, title, subtitle, center = false }: { eyebrow?: string, title: string, subtitle?: string, center?: boolean }) {
   return (
     <div className={`mb-8 ${center ? "text-center" : ""}`}>
       {eyebrow && (
