@@ -1,14 +1,15 @@
+import { IUser } from "../types";
 "use strict";
-const User       = require("../models/User");
-const AppError   = require("../utils/AppError");
-const catchAsync = require("../utils/catchAsync");
-const logger     = require("../utils/logger");
+import User from "../models/User";
+import AppError from "../utils/AppError";
+import catchAsync from "../utils/catchAsync";
+import logger from "../utils/logger";
 
 // Helper: send token response
-const sendToken = (user, statusCode, res) => {
+const sendToken = (user: IUser, statusCode: any, res: any) => {
   const token = user.getSignedJWT();
   const cookieOptions = {
-    expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRE) || 7) * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRE as string) || 7) * 24 * 60 * 60 * 1000),
     httpOnly: true,
     secure:   process.env.NODE_ENV === "production",
     sameSite: "Strict",
@@ -25,7 +26,7 @@ const sendToken = (user, statusCode, res) => {
 };
 
 // POST /api/auth/register
-exports.register = catchAsync(async (req, res, next) => {
+export const register = catchAsync(async (req: any, res: any, next: any) => {
   const { name, email, password, preferredLang } = req.body;
 
   const exists = await User.findOne({ email });
@@ -37,10 +38,10 @@ exports.register = catchAsync(async (req, res, next) => {
 });
 
 // POST /api/auth/login
-exports.login = catchAsync(async (req, res, next) => {
+export const login = catchAsync(async (req: any, res: any, next: any) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne<IUser>({ email }).select("+password");
   if (!user || !(await user.matchPassword(password))) {
     return next(new AppError("Invalid email or password.", 401));
   }
@@ -54,13 +55,13 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 // GET /api/auth/me
-exports.getMe = catchAsync(async (req, res) => {
-  const user = await User.findById(req.user.id);
+export const getMe = catchAsync(async (req: any, res: any) => {
+  const user = await User.findById<IUser>(req.user.id);
   res.status(200).json({ status: "success", data: { user } });
 });
 
 // PATCH /api/auth/update-profile
-exports.updateProfile = catchAsync(async (req, res, next) => {
+export const updateProfile = catchAsync(async (req: any, res: any, next: any) => {
   const { name, preferredLang } = req.body;
   if (req.body.password) {
     return next(new AppError("Use /change-password to update your password.", 400));
@@ -74,10 +75,11 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
 });
 
 // PATCH /api/auth/change-password
-exports.changePassword = catchAsync(async (req, res, next) => {
+export const changePassword = catchAsync(async (req: any, res: any, next: any) => {
   const { currentPassword, newPassword } = req.body;
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById<IUser>(req.user.id).select("+password");
 
+  if (!user) return next(new AppError("User not found", 404));
   if (!(await user.matchPassword(currentPassword))) {
     return next(new AppError("Current password is incorrect.", 401));
   }
@@ -88,7 +90,7 @@ exports.changePassword = catchAsync(async (req, res, next) => {
 });
 
 // POST /api/auth/logout
-exports.logout = (_req, res) => {
+export const logout = (_req, res) => {
   res
     .cookie("jwt", "", { expires: new Date(0), httpOnly: true })
     .status(200)

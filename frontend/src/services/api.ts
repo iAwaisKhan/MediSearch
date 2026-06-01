@@ -12,15 +12,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// ── Request interceptor: attach JWT ──────────────────────────────────────
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("ms_token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (err) => Promise.reject(err)
-);
+// ── Request interceptor removed (Using HttpOnly Cookies now) ────────────
 
 // ── Response interceptor: handle 401 globally ───────────────────────────
 api.interceptors.response.use(
@@ -30,11 +22,13 @@ api.interceptors.response.use(
     const message = err.response?.data?.message || "Something went wrong.";
 
     if (status === 401) {
-      localStorage.removeItem("ms_token");
       localStorage.removeItem("ms_user");
-      // Redirect only if not already on auth pages
-      if (!window.location.pathname.startsWith("/login") &&
-          !window.location.pathname.startsWith("/register")) {
+      
+      const isAuthPage = window.location.pathname.startsWith("/login") || window.location.pathname.startsWith("/register");
+      const isOptionalAuthReq = err.config?.url?.includes("/medicine/");
+      
+      // Redirect only if not on auth pages and request wasn't optional auth
+      if (!isAuthPage && !isOptionalAuthReq) {
         window.location.href = "/login";
       }
     } else if (status === 429) {
@@ -43,7 +37,10 @@ api.interceptors.response.use(
       toast.error("Server error. Please try again later.");
     }
 
-    return Promise.reject({ message, status });
+    const error = new Error(message);
+    // @ts-ignore - custom property
+    error.status = status;
+    return Promise.reject(error);
   }
 );
 

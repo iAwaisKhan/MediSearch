@@ -10,39 +10,42 @@ export function AuthProvider({ children }) {
   });
   const [loading, setLoading] = useState(true);
 
-  // Validate stored token on mount
+  // Validate session via HttpOnly cookie on mount
   useEffect(() => {
-    const token = localStorage.getItem("ms_token");
-    if (!token) { setLoading(false); return; }
     authAPI.getMe()
-      .then((res) => setUser(res.data.data.user))
-      .catch(() => { localStorage.removeItem("ms_token"); localStorage.removeItem("ms_user"); })
+      .then((res) => {
+        const userData = res.data.data.user;
+        setUser(userData);
+        localStorage.setItem("ms_user", JSON.stringify(userData));
+      })
+      .catch(() => { 
+        setUser(null);
+        localStorage.removeItem("ms_user"); 
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  const saveSession = (token, userData) => {
-    localStorage.setItem("ms_token", token);
+  const saveSession = useCallback((userData) => {
     localStorage.setItem("ms_user",  JSON.stringify(userData));
     setUser(userData);
-  };
+  }, []);
 
   const register = useCallback(async (formData) => {
     const res = await authAPI.register(formData);
-    saveSession(res.data.token, res.data.data.user);
+    saveSession(res.data.data.user);
     toast.success(`Welcome, ${res.data.data.user.name}! 🎉`);
     return res.data;
-  }, []);
+  }, [saveSession]);
 
   const login = useCallback(async (formData) => {
     const res = await authAPI.login(formData);
-    saveSession(res.data.token, res.data.data.user);
+    saveSession(res.data.data.user);
     toast.success(`Welcome back, ${res.data.data.user.name}!`);
     return res.data;
-  }, []);
+  }, [saveSession]);
 
   const logout = useCallback(async () => {
     await authAPI.logout().catch(() => {});
-    localStorage.removeItem("ms_token");
     localStorage.removeItem("ms_user");
     setUser(null);
     toast.success("Logged out successfully.");

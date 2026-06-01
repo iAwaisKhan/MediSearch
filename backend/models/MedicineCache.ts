@@ -1,5 +1,4 @@
-"use strict";
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const genericSchema = new mongoose.Schema(
   {
@@ -51,6 +50,4 @@ const medicineCacheSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("MedicineCache", medicineCacheSchema);
-
-export {};
+export default mongoose.model("MedicineCache", medicineCacheSchema);

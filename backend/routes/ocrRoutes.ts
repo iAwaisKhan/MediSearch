@@ -1,9 +1,8 @@
-"use strict";
-const express = require("express");
-const multer  = require("multer");
+import express from "express";
+import multer from "multer";
 const router  = express.Router();
-const ctrl    = require("../controllers/ocrController");
-const { optionalAuth } = require("../middleware/authMiddleware");
+import * as ctrl from "../controllers/ocrController";
+import { optionalAuth  } from "../middleware/authMiddleware";
 
 // ── Multer config: memory storage, 5 MB limit, images only ──────────────
 const upload = multer({
@@ -27,7 +26,7 @@ router.post(
 );
 
 // Handle multer errors gracefully
-router.use((err, _req, res, _next) => {
+router.use((err: any, _req: any, res: any, _next: any) => {
   if (err.code === "LIMIT_FILE_SIZE") {
     return res.status(413).json({
       status: "fail",
@@ -46,6 +45,4 @@ router.use((err, _req, res, _next) => {
   });
 });
 
-module.exports = router;
-
-export {};
+export default router;

@@ -1,16 +1,15 @@
-"use strict";
-const NodeCache     = require("node-cache");
-const MedicineCache = require("../models/MedicineCache");
-const logger        = require("../utils/logger");
+import NodeCache from "node-cache";
+import MedicineCache from "../models/MedicineCache";
+import logger from "../utils/logger";
 
 // In-memory L1 cache (5 min) – reduces MongoDB round trips
 const memCache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 
-function makeCacheKey(name, lang) {
+function makeCacheKey(name: string, lang: string) {
   return `${lang}:${name.toLowerCase().trim()}`;
 }
 
-async function getCache(name, lang) {
+async function getCache(name: string, lang: string) {
   const key = makeCacheKey(name, lang);
 
   // 1. Check memory cache
@@ -26,19 +25,19 @@ async function getCache(name, lang) {
     if (doc) {
       // Increment hit count async (don't await)
       MedicineCache.updateOne({ cacheKey: key }, { $inc: { hitCount: 1 } }).catch(() => {});
-      const plain = doc.toObject();
-      memCache.set(key, plain); // Warm L1 cache
+      const { _id, __v, cacheKey, medicineName, hitCount, expiresAt, createdAt, updatedAt, ...cleanData } = doc.toObject();
+      memCache.set(key, cleanData); // Warm L1 cache
       logger.debug(`L2 (MongoDB) cache hit: ${key}`);
-      return { data: plain, source: "mongodb" };
+      return { data: cleanData, source: "mongodb" };
     }
-  } catch (err) {
+  } catch (err: any) {
     logger.warn(`Cache read error: ${err.message}`);
   }
 
   return null;
 }
 
-async function setCache(name, lang, data) {
+async function setCache(name: string, lang: string, data: any) {
   const key = makeCacheKey(name, lang);
   memCache.set(key, data);
 
@@ -54,11 +53,9 @@ async function setCache(name, lang, data) {
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
-  } catch (err) {
+  } catch (err: any) {
     logger.warn(`Cache write error: ${err.message}`);
   }
 }
 
-module.exports = { getCache, setCache, makeCacheKey };
-
-export {};
+export default { getCache, setCache, makeCacheKey };

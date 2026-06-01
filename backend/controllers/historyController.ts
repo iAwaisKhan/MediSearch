@@ -1,9 +1,8 @@
-"use strict";
-const SearchHistory = require("../models/SearchHistory");
-const catchAsync    = require("../utils/catchAsync");
+import SearchHistory from "../models/SearchHistory";
+import catchAsync from "../utils/catchAsync";
 
 // GET /api/history  ?page=1&limit=20&type=search
-exports.getHistory = catchAsync(async (req, res) => {
+export const getHistory = catchAsync(async (req: any, res: any) => {
   const page  = Math.max(1, parseInt(req.query.page)  || 1);
   const limit = Math.min(50, parseInt(req.query.limit) || 20);
   const skip  = (page - 1) * limit;
@@ -26,20 +25,20 @@ exports.getHistory = catchAsync(async (req, res) => {
 });
 
 // DELETE /api/history/:id
-exports.deleteHistoryItem = catchAsync(async (req, res, next) => {
+export const deleteHistoryItem = catchAsync(async (req: any, res: any, next: any) => {
   const doc = await SearchHistory.findOneAndDelete({ _id: req.params.id, user: req.user.id });
   if (!doc) return next(new (require("../utils/AppError"))("History item not found.", 404));
   res.status(200).json({ status: "success", message: "Deleted." });
 });
 
 // DELETE /api/history  (clear all)
-exports.clearHistory = catchAsync(async (req, res) => {
+export const clearHistory = catchAsync(async (req: any, res: any) => {
   await SearchHistory.deleteMany({ user: req.user.id });
   res.status(200).json({ status: "success", message: "History cleared." });
 });
 
 // GET /api/history/stats
-exports.getStats = catchAsync(async (req, res) => {
+export const getStats = catchAsync(async (req: any, res: any) => {
   const stats = await SearchHistory.aggregate([
     { $match: { user: req.user._id } },
     {
@@ -58,5 +57,3 @@ exports.getStats = catchAsync(async (req, res) => {
   ]);
   res.status(200).json({ status: "success", data: { stats, topSearches } });
 });
-
-export {};

@@ -1,6 +1,5 @@
-"use strict";
-const AppError = require("../utils/AppError");
-const logger   = require("../utils/logger");
+import AppError from "../utils/AppError";
+import logger from "../utils/logger";
 
 function handleCastError(err) {
   return new AppError(`Invalid ${err.path}: ${err.value}`, 400);
@@ -20,11 +19,11 @@ function handleJWTExpired() {
   return new AppError("Session expired. Please log in again.", 401);
 }
 
-module.exports = (err, req, res, next) => {
+export default (err: any, req: any, res: any, next: any) => {
   err.statusCode = err.statusCode || 500;
   err.status     = err.status     || "error";
 
-  let error = { ...err, message: err.message };
+  let error = Object.assign(Object.create(Object.getPrototypeOf(err)), err, { message: err.message });
 
   if (err.name === "CastError")              error = handleCastError(err);
   if (err.code  === 11000)                   error = handleDuplicateKey(err);
@@ -48,5 +47,3 @@ module.exports = (err, req, res, next) => {
     ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
   });
 };
-
-export {};

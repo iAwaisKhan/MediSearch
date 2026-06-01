@@ -1,13 +1,9 @@
-"use strict";
-const { GoogleGenAI } = require("@google/genai");
-const logger    = require("../utils/logger");
-const AppError  = require("../utils/AppError");
-
-const MODEL  = "gemini-2.5-flash";
-const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+import { GoogleGenAI  } from "@google/genai";
+import logger from "../utils/logger";
+import AppError from "../utils/AppError";
 
 // ── Prompt builders ────────────────────────────────────────────────────────
-function buildSearchPrompt(name, lang) {
+function buildSearchPrompt(name: string, lang: string) {
   const langInstr =
     lang === "hi"
       ? "Respond with ALL descriptive text fields in Hindi (Devanagari script). Keep medicine names, brand names, and manufacturer names in English."
@@ -41,7 +37,7 @@ Respond ONLY with a single JSON object (no markdown fences, no extra text, no co
 If the input is not a valid medicine name, return exactly: {"error": "Medicine not found"}`;
 }
 
-function buildComparePrompt(medA, medB, lang) {
+function buildComparePrompt(medA: string, medB: string, lang: string) {
   const langInstr =
     lang === "hi"
       ? "Respond with all descriptive text in Hindi (Devanagari). Keep medicine names, brand names in English."
@@ -76,12 +72,8 @@ Respond ONLY with a JSON array of exactly 2 medicine objects (no markdown fences
 }
 
 // ── Core call ──────────────────────────────────────────────────────────────
-// WARNING: LLM7 uses a self-signed cert. We scope the TLS bypass to ONLY
-//          this request via a custom https.Agent. Remove once LLM7 fixes their cert.
-const https = require("https");
-const llm7Agent = new https.Agent({ rejectUnauthorized: false });
 
-async function callLLM7(prompt) {
+async function callLLM7(prompt: string) {
   if (!process.env.LLM7_API_KEY) {
     throw new Error("LLM7 API Key not found");
   }
@@ -96,8 +88,7 @@ async function callLLM7(prompt) {
       model: "default",
       messages: [{ role: "user", content: prompt }]
     }),
-    // @ts-ignore – Node 18+ fetch supports the dispatcher/agent option
-    dispatcher: llm7Agent,
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!response.ok) {
@@ -112,7 +103,7 @@ async function callLLM7(prompt) {
   return JSON.parse(content);
 }
 
-async function callGemini(prompt) {
+async function callGemini(prompt: string) {
   if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes("mock")) {
     logger.info("Using mock AI response");
     if (prompt.includes("Compare these two medicines")) {
@@ -174,6 +165,8 @@ async function callGemini(prompt) {
   }
 
   try {
+    const MODEL  = "gemini-2.5-flash";
+    const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const response = await client.models.generateContent({
       model: MODEL,
       contents: prompt,
@@ -182,10 +175,10 @@ async function callGemini(prompt) {
       }
     });
 
-    let text = response.text;
+    let text = response.text || "";
     text = text.replace(/^```(json)?/, '').replace(/```$/, '').trim();
     return JSON.parse(text);
-  } catch (err) {
+  } catch (err: any) {
     logger.error(`Gemini API error: ${err.message}`);
     if (err instanceof SyntaxError) {
       throw new AppError("AI returned an unparseable response. Please try again.", 502);
@@ -195,26 +188,24 @@ async function callGemini(prompt) {
 }
 
 // ── Public helpers ─────────────────────────────────────────────────────────
-async function fetchMedicine(name, lang = "en") {
+async function fetchMedicine(name: string, lang = "en") {
   const prompt = buildSearchPrompt(name, lang);
   try {
     return await callLLM7(prompt);
-  } catch (err) {
+  } catch (err: any) {
     logger.warn(`LLM7 failed for search, falling back to Gemini: ${err.message}`);
     return await callGemini(prompt);
   }
 }
 
-async function fetchCompare(medA, medB, lang = "en") {
+async function fetchCompare(medA: string, medB: string, lang = "en") {
   const prompt = buildComparePrompt(medA, medB, lang);
   try {
     return await callLLM7(prompt);
-  } catch (err) {
+  } catch (err: any) {
     logger.warn(`LLM7 failed for compare, falling back to Gemini: ${err.message}`);
     return await callGemini(prompt);
   }
 }
 
-module.exports = { fetchMedicine, fetchCompare };
-
-export {};
+export default { fetchMedicine, fetchCompare };

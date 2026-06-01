@@ -1,5 +1,3 @@
-"use strict";
-
 class AppError extends Error {
   statusCode: number;
   status: string;
@@ -14,6 +12,4 @@ class AppError extends Error {
   }
 }
 
-module.exports = AppError;
-
-export {};
+export default AppError;

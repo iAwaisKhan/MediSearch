@@ -1,6 +1,6 @@
 "use strict";
-const { z } = require("zod");
-const logger = require("../utils/logger");
+import { z  } from "zod";
+import logger from "../utils/logger";
 
 const envSchema = z.object({
   PORT: z.string().default("5000"),
@@ -26,6 +26,6 @@ try {
   process.exit(1);
 }
 
-module.exports = envSchema;
+export default envSchema;
 
 export {};

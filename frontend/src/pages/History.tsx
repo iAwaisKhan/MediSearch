@@ -29,27 +29,33 @@ export default function HistoryPage() {
   const [total,    setTotal]    = useState(0);
   const [filter,   setFilter]   = useState("all");
 
+  const fetchStats = useCallback(async () => {
+    try {
+      const statsRes = await historyAPI.getStats();
+      setStats(statsRes.data.data);
+    } catch (err) {
+      console.error("Could not load stats", err);
+    }
+  }, []);
+
   const fetchData = useCallback(async (p = 1) => {
     setLoading(true);
     setError(null);
     try {
       const params = { page: p, limit: 20, ...(filter !== "all" && { type: filter }) };
-      const [histRes, statsRes] = await Promise.all([
-        historyAPI.getAll(params),
-        historyAPI.getStats(),
-      ]);
+      const histRes = await historyAPI.getAll(params);
       setItems(histRes.data.data);
       setPage(histRes.data.page);
       setPages(histRes.data.pages);
       setTotal(histRes.data.total);
-      setStats(statsRes.data.data);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || "Could not load history.");
     } finally {
       setLoading(false);
     }
   }, [filter]);
 
+  useEffect(() => { fetchStats(); }, [fetchStats]);
   useEffect(() => { fetchData(1); }, [fetchData]);
 
   const handleDelete  = (id)  => setItems((prev) => prev.filter((i) => i._id !== id));

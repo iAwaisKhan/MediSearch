@@ -1,13 +1,12 @@
-"use strict";
-const aiService  = require("../services/aiService");
-const cacheService   = require("../services/cacheService");
-const SearchHistory  = require("../models/SearchHistory");
-const AppError       = require("../utils/AppError");
-const catchAsync     = require("../utils/catchAsync");
-const logger         = require("../utils/logger");
+import aiService from "../services/aiService";
+import cacheService from "../services/cacheService";
+import SearchHistory from "../models/SearchHistory";
+import AppError from "../utils/AppError";
+import catchAsync from "../utils/catchAsync";
+import logger from "../utils/logger";
 
 // ── POST /api/medicine/search ────────────────────────────────────────────
-exports.searchMedicine = catchAsync(async (req, res, next) => {
+export const searchMedicine = catchAsync(async (req: any, res: any, next: any) => {
   const name = (req.query.name || "").trim();
   const lang = req.query.lang === "hi" ? "hi" : "en";
   const start = Date.now();
@@ -66,7 +65,7 @@ exports.searchMedicine = catchAsync(async (req, res, next) => {
 });
 
 // ── GET /api/medicine/compare ────────────────────────────────────────────
-exports.compareMedicines = catchAsync(async (req, res, next) => {
+export const compareMedicines = catchAsync(async (req: any, res: any, next: any) => {
   const a    = (req.query.a || "").trim();
   const b    = (req.query.b || "").trim();
   const lang = req.query.lang === "hi" ? "hi" : "en";
@@ -117,5 +116,3 @@ exports.compareMedicines = catchAsync(async (req, res, next) => {
     data: results,
   });
 });
-
-export {};

@@ -1,7 +1,7 @@
-"use strict";
-const mongoose = require("mongoose");
-const bcrypt   = require("bcryptjs");
-const jwt      = require("jsonwebtoken");
+import { IUser } from "../types";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
@@ -53,7 +53,7 @@ userSchema.pre("save", async function (next) {
 });
 
 // Instance method: compare password
-userSchema.methods.matchPassword = async function (enteredPassword) {
+userSchema.methods.matchPassword = async function (enteredPassword: string) {
   return bcrypt.compare(enteredPassword, this.password);
 };
 
@@ -65,7 +65,7 @@ userSchema.methods.getSignedJWT = function () {
 };
 
 // Instance method: check if password changed after JWT was issued
-userSchema.methods.changedPasswordAfter = function (jwtIat) {
+userSchema.methods.changedPasswordAfter = function (jwtIat: number) {
   if (this.passwordChangedAt) {
     return Math.floor(this.passwordChangedAt.getTime() / 1000) > jwtIat;
   }
@@ -79,6 +79,4 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
-module.exports = mongoose.model("User", userSchema);
-
-export {};
+export default mongoose.model("User", userSchema);

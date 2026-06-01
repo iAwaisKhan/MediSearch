@@ -1,8 +1,7 @@
-"use strict";
-const express  = require("express");
+import express from "express";
 const router   = express.Router();
-const ctrl     = require("../controllers/historyController");
-const { protect } = require("../middleware/authMiddleware");
+import * as ctrl from "../controllers/historyController";
+import { protect  } from "../middleware/authMiddleware";
 
 router.use(protect); // All history routes require auth
 
@@ -11,6 +10,4 @@ router.get("/stats",   ctrl.getStats);
 router.delete("/",     ctrl.clearHistory);
 router.delete("/:id",  ctrl.deleteHistoryItem);
 
-module.exports = router;
-
-export {};
+export default router;

@@ -1,6 +1,6 @@
-const request = require("supertest");
-const app = require("../server");
-const mongoose = require("mongoose");
+import request from "supertest";
+import app from "../app";
+import mongoose from "mongoose";
 
 describe("GET /api/health", () => {
   afterAll(async () => {
@@ -18,5 +18,3 @@ describe("GET /api/health", () => {
     expect(res.body).toHaveProperty("env");
   });
 });
-
-export {};

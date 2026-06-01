@@ -1,14 +1,10 @@
-"use strict";
-const { GoogleGenAI } = require("@google/genai");
-const catchAsync = require("../utils/catchAsync");
-const AppError   = require("../utils/AppError");
-const logger     = require("../utils/logger");
-
-const MODEL  = "gemini-2.5-flash";
-const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+import { GoogleGenAI  } from "@google/genai";
+import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/AppError";
+import logger from "../utils/logger";
 
 // ── OCR: extract medicine names from an image ───────────────────────────
-exports.extractMedicineFromImage = catchAsync(async (req, res, next) => {
+export const extractMedicineFromImage = catchAsync(async (req: any, res: any, next: any) => {
   if (!req.file) {
     return next(new AppError("No image file uploaded.", 400));
   }
@@ -34,6 +30,9 @@ exports.extractMedicineFromImage = catchAsync(async (req, res, next) => {
   }
 
   try {
+    const MODEL  = "gemini-2.5-flash";
+    const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    
     // Convert the in-memory buffer to a base64 string for the Gemini API
     const base64Image = req.file.buffer.toString("base64");
     const mimeType    = req.file.mimetype; // e.g. "image/jpeg"
@@ -87,7 +86,7 @@ Rules:
       },
     });
 
-    let text = response.text;
+    let text = response.text || "";
     text = text.replace(/^```(json)?/, "").replace(/```$/, "").trim();
     const parsed = JSON.parse(text);
 
@@ -97,7 +96,7 @@ Rules:
       status: "success",
       data: parsed,
     });
-  } catch (err) {
+  } catch (err: any) {
     logger.error(`OCR Gemini error: ${err.message}`);
     if (err instanceof SyntaxError) {
       return next(new AppError("AI returned an unparseable OCR response. Please try again.", 502));
@@ -105,5 +104,3 @@ Rules:
     return next(new AppError(err.message || "OCR service unavailable", 503));
   }
 });
-
-export {};

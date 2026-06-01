@@ -1,5 +1,4 @@
-"use strict";
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const searchHistorySchema = new mongoose.Schema(
   {
@@ -45,6 +44,4 @@ const searchHistorySchema = new mongoose.Schema(
 // Index for fast user-history queries (sorted by newest)
 searchHistorySchema.index({ user: 1, createdAt: -1 });
 
-module.exports = mongoose.model("SearchHistory", searchHistorySchema);
-
-export {};
+export default mongoose.model("SearchHistory", searchHistorySchema);
