@@ -1,5 +1,4 @@
 import { IUser } from "../types";
-"use strict";
 import User from "../models/User";
 import AppError from "../utils/AppError";
 import catchAsync from "../utils/catchAsync";
@@ -8,11 +7,13 @@ import logger from "../utils/logger";
 // Helper: send token response
 const sendToken = (user: IUser, statusCode: any, res: any) => {
   const token = user.getSignedJWT();
+  const sameSite = (process.env.COOKIE_SAME_SITE || "lax") as "lax" | "strict" | "none";
   const cookieOptions = {
     expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRE as string) || 7) * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    secure:   process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    secure:   process.env.NODE_ENV === "production" || sameSite === "none",
+    sameSite,
+    path: "/",
   };
 
   res
@@ -20,11 +21,9 @@ const sendToken = (user: IUser, statusCode: any, res: any) => {
     .cookie("jwt", token, cookieOptions)
     .json({
       status: "success",
-      token,
       data: { user },
     });
 };
-
 // POST /api/auth/register
 export const register = catchAsync(async (req: any, res: any, next: any) => {
   const { name, email, password, preferredLang } = req.body;
@@ -92,9 +91,7 @@ export const changePassword = catchAsync(async (req: any, res: any, next: any) =
 // POST /api/auth/logout
 export const logout = (_req: any, res: any) => {
   res
-    .cookie("jwt", "", { expires: new Date(0), httpOnly: true })
+    .cookie("jwt", "", { expires: new Date(0), httpOnly: true, path: "/" })
     .status(200)
     .json({ status: "success", message: "Logged out successfully." });
 };
-
-export {};

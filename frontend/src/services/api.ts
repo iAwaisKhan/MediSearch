@@ -26,9 +26,10 @@ api.interceptors.response.use(
       
       const isAuthPage = window.location.pathname.startsWith("/login") || window.location.pathname.startsWith("/register");
       const isOptionalAuthReq = err.config?.url?.includes("/medicine/");
+      const isSessionCheck = err.config?.url?.endsWith("/auth/me");
       
       // Redirect only if not on auth pages and request wasn't optional auth
-      if (!isAuthPage && !isOptionalAuthReq) {
+      if (!isAuthPage && !isOptionalAuthReq && !isSessionCheck) {
         window.location.href = "/login";
       }
     } else if (status === 429) {

@@ -6,7 +6,23 @@ import logger from "../utils/logger";
 const memCache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 
 function makeCacheKey(name: string, lang: string) {
-  return `${lang}:${name.toLowerCase().trim()}`;
+  return `${lang.toLowerCase().trim()}:${name.toLowerCase().trim()}`;
+}
+
+const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "86400", 10);
+
+const CACHE_FIELDS = [
+  "name", "genericName", "category", "emoji", "purpose", "howToTake",
+  "dosage", "suitableFor", "notSuitableFor", "sideEffects", "precautions",
+  "interactions", "storage", "warning", "generics",
+] as const;
+
+function pickCacheFields(data: Record<string, unknown>) {
+  return Object.fromEntries(
+    CACHE_FIELDS
+      .filter((field) => data[field] !== undefined)
+      .map((field) => [field, data[field]])
+  );
 }
 
 async function getCache(name: string, lang: string) {
@@ -48,8 +64,8 @@ async function setCache(name: string, lang: string, data: any) {
         cacheKey:       key,
         medicineName:   name.toLowerCase().trim(),
         lang,
-        ...data,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        ...pickCacheFields(data),
+        expiresAt: new Date(Date.now() + CACHE_TTL_SECONDS * 1000),
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );

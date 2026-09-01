@@ -9,10 +9,11 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRE: z.string().default("7d"),
   JWT_COOKIE_EXPIRE: z.string().default("7"),
+  COOKIE_SAME_SITE: z.enum(["lax", "strict", "none"]).default("lax"),
   GEMINI_API_KEY: z.string().optional(),
   LLM7_API_KEY: z.string().optional(),
   CLIENT_URL: z.string().url(),
-  CACHE_TTL_SECONDS: z.string().default("3600"),
+  CACHE_TTL_SECONDS: z.string().default("86400"),
 });
 
 try {
@@ -27,5 +28,3 @@ try {
 }
 
 export default envSchema;
-
-export {};

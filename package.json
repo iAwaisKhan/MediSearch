@@ -5,9 +5,16 @@
   "scripts": {
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
-    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces",
+    "ci": "npm run typecheck && npm run lint && npm run test && npm run build",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm run build && npm run preview"
   },
-  "workspaces": ["backend", "frontend"]
+  "workspaces": ["backend", "frontend"],
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }
