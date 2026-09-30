@@ -28,7 +28,7 @@ MongoDB cache/history  <->  Gemini / LLM7
       OCR image pipeline
 ```
 
-The AI layer currently uses JSON-mode prompts and provider fallback. Grounded retrieval, source citations, clinical interaction verification, and formal AI evaluation are planned in [the transformation proposal](docs/AI_TRANSFORMATION_PROPOSAL.md).
+The AI layer currently uses structured JSON prompts, LLM7-first provider fallback to Gemini, mock mode for local development, MongoDB and in-memory caching, and multimodal OCR. Current behavior, architecture, API usage, development setup, and safety boundaries are documented in the [documentation index](docs/README.md).
 
 ## Stack
 
